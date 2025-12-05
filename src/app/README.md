@@ -1,70 +1,53 @@
-# Getting Started with Create React App
+# Implementation Details
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+Here is how the project requirements were implemented step-by-step:
 
-## Available Scripts
+## 1. Form Submission (POST)
+**Requirement:** On form submission, the app should interact with the Django backend (`POST http://localhost:8000/todos`) and create a TODO in MongoDB.
 
-In the project directory, you can run:
+**Implementation:**
+- I implemented the `handleAddTodo` function in `App.js`.
+- This function uses the `fetch` API to send a `POST` request to `http://localhost:8000/todos/`.
+- The todo description is sent in the request body as JSON.
+- This function is passed as a prop (`onAddTodo`) to the `TodoForm` component.
 
-### `yarn start`
+## 2. Fetching Todos (GET)
+**Requirement:** A list with hardcoded TODOs should be changed to reflect TODOs in the backend (`GET http://localhost:8000/todos`).
 
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in the browser.
+**Implementation:**
+- I implemented the `fetchTodos` function in `App.js` to retrieve data from the backend.
+- It sends a `GET` request to `http://localhost:8000/todos/`.
+- I used the `useState` hook to create a `todos` state variable for storing the list.
+- I used the `useEffect` hook to call `fetchTodos` once when the component mounts, ensuring the list is populated on load.
+- The `todos` state is passed as a prop to the `TodoList` component for rendering.
 
-The page will reload if you make edits.\
-You will also see any lint errors in the console.
+## 3. Refreshing the List
+**Requirement:** When the form is submitted, the TODO list should refresh again and fetch latest list of TODOs from MongoDB.
 
-### `yarn test`
+**Implementation:**
+- Inside the `handleAddTodo` function, I added a call to `fetchTodos()` immediately after the `POST` request completes successfully.
+- This triggers a re-fetch of the data, updating the `todos` state and causing the UI to re-render with the newly added item.
 
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+---
 
-### `yarn build`
+## Other Improvements
 
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
+### Docker Fix
+- The Docker container was using `yarn` while the host used `npm`, causing conflicts.
+- I updated `docker-compose.yml` to use `npm install && npm start` and rebuilt the containers.
 
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
+### Styling
+- I updated the main container in `App.js` to look like a rectangular note with a pink background (`#ff8da1`), padding, and shadow.
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
+### Git Configuration
+- Updated the remote repository URL to `git@github.com:Navneetanavie/To-Do-List.git`.
 
-### `yarn eject`
+## How to Run
 
-**Note: this is a one-way operation. Once you `eject`, you can’t go back!**
-
-If you aren’t satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
-
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you’re on your own.
-
-You don’t have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn’t feel obligated to use this feature. However we understand that this tool wouldn’t be useful if you couldn’t customize it when you are ready for it.
-
-## Learn More
-
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
-
-To learn React, check out the [React documentation](https://reactjs.org/).
-
-### Code Splitting
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/code-splitting](https://facebook.github.io/create-react-app/docs/code-splitting)
-
-### Analyzing the Bundle Size
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size](https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size)
-
-### Making a Progressive Web App
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app](https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app)
-
-### Advanced Configuration
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/advanced-configuration](https://facebook.github.io/create-react-app/docs/advanced-configuration)
-
-### Deployment
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/deployment](https://facebook.github.io/create-react-app/docs/deployment)
-
-### `yarn build` fails to minify
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify](https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify)
+1.  **Start Docker Containers:**
+    ```bash
+    docker-compose up -d --build
+    ```
+2.  **Access the App:**
+    - Frontend: [http://localhost:3000](http://localhost:3000)
+    - Backend API: [http://localhost:8000](http://localhost:8000)
